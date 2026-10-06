@@ -140,7 +140,17 @@ export function CartDrawer() {
             <button
               type="button"
               className="button button--ghost button--block"
-              onClick={() => dispatch({ type: 'cart/clear' })}
+              onClick={() => {
+                if (typeof pendo !== 'undefined') {
+                  pendo.track('cart_cleared', {
+                    restaurantId: cart.restaurantId ?? '',
+                    restaurantName: restaurant?.name ?? '',
+                    itemCount: cart.itemCount,
+                    subtotal: cart.subtotal,
+                  })
+                }
+                dispatch({ type: 'cart/clear' })
+              }}
             >
               Empty cart
             </button>

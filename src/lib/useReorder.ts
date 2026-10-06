@@ -20,6 +20,20 @@ export function useReorder(): (order: Order) => void {
       })
       notify(`${order.restaurantName} order added to your cart`)
       openCart()
+
+      if (typeof pendo !== 'undefined') {
+        pendo.track('reorder_initiated', {
+          originalOrderId: order.id,
+          restaurantId: order.restaurantId,
+          restaurantName: order.restaurantName,
+          itemCount: order.lines.reduce(
+            (sum, line) => sum + line.qty,
+            0,
+          ),
+          fulfillment: order.fulfillment,
+          originalTotal: order.totals.total,
+        })
+      }
     },
     [dispatch, notify, openCart],
   )

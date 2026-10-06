@@ -106,6 +106,15 @@ export function Checkout() {
     setErrors(nextErrors)
 
     if (Object.keys(nextErrors).length > 0) {
+      if (typeof pendo !== 'undefined') {
+        pendo.track('checkout_validation_failed', {
+          errorFields: Object.keys(nextErrors).join(','),
+          errorCount: Object.keys(nextErrors).length,
+          fulfillment: fulfillment,
+          restaurantId: restaurant.id,
+          restaurantName: restaurant.name,
+        })
+      }
       notify('Check the highlighted fields')
       return
     }
@@ -135,6 +144,23 @@ export function Checkout() {
     window.setTimeout(() => {
       dispatch({ type: 'order/place', order })
       setPlacedOrderId(order.id)
+
+      if (typeof pendo !== 'undefined') {
+        pendo.track('order_placed', {
+          orderId: order.id,
+          restaurantId: order.restaurantId,
+          restaurantName: order.restaurantName,
+          fulfillment: order.fulfillment,
+          itemCount: cart.itemCount,
+          subtotal: order.totals.subtotal,
+          deliveryFee: order.totals.deliveryFee,
+          serviceFee: order.totals.serviceFee,
+          tip: order.totals.tip,
+          tipPercent: tipPercent,
+          total: order.totals.total,
+          etaMinutes: order.etaMinutes,
+        })
+      }
     }, 550)
   }
 

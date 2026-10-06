@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { cuisines, restaurants } from '../data/restaurants'
 import type { Restaurant } from '../data/restaurants'
 import { RestaurantCard } from '../components/RestaurantCard'
@@ -56,6 +56,31 @@ export function Browse() {
     )
     return sortRestaurants(filtered, sort)
   }, [query, cuisine, freeDeliveryOnly, sort])
+
+  // Track search interactions on a debounced basis so rapid keystrokes
+  // collapse into a single event.
+  const isInitialRender = useRef(true)
+  useEffect(() => {
+    // Skip the very first render — that is the default state, not a search.
+    if (isInitialRender.current) {
+      isInitialRender.current = false
+      return
+    }
+
+    const timer = window.setTimeout(() => {
+      if (typeof pendo !== 'undefined') {
+        pendo.track('restaurant_searched', {
+          query: query,
+          cuisineFilter: cuisine ?? '',
+          freeDeliveryOnly: freeDeliveryOnly,
+          sortKey: sort,
+          resultsCount: results.length,
+        })
+      }
+    }, 500)
+
+    return () => window.clearTimeout(timer)
+  }, [query, cuisine, freeDeliveryOnly, sort, results.length])
 
   const clearFilters = () => {
     setQuery('')
