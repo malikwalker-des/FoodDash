@@ -79,21 +79,7 @@ export function Browse() {
             placeholder="Search restaurants or dishes"
             aria-label="Search restaurants or dishes"
           />
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              if (typeof pendo !== 'undefined') {
-                pendo.track('restaurant_search_executed', {
-                  query: query.slice(0, 100),
-                  cuisineFilter: cuisine ?? 'all',
-                  freeDeliveryOnly,
-                  sortKey: sort,
-                  resultsCount: results.length,
-                })
-              }
-            }}
-          >
+          <button type="button" className="button">
             Search
           </button>
         </div>

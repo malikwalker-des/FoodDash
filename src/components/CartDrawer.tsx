@@ -99,11 +99,7 @@ export function CartDrawer() {
                     quantity={line.qty}
                     itemName={line.name}
                     onChange={(qty) =>
-                      dispatch({
-                        type: 'cart/setQty',
-                        itemId: line.itemId,
-                        qty,
-                      })
+                      dispatch({ type: 'cart/setQty', itemId: line.itemId, qty })
                     }
                   />
                 </li>
@@ -144,17 +140,7 @@ export function CartDrawer() {
             <button
               type="button"
               className="button button--ghost button--block"
-              onClick={() => {
-                if (typeof pendo !== 'undefined') {
-                  pendo.track('cart_cleared', {
-                    restaurantId: cart.restaurantId,
-                    restaurantName: restaurant?.name,
-                    itemCount: cart.itemCount,
-                    subtotal: cart.subtotal,
-                  })
-                }
-                dispatch({ type: 'cart/clear' })
-              }}
+              onClick={() => dispatch({ type: 'cart/clear' })}
             >
               Empty cart
             </button>
