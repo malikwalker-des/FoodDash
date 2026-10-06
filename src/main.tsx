@@ -5,6 +5,13 @@ import './index.css'
 import App from './App.tsx'
 import { StoreProvider } from './lib/StoreProvider.tsx'
 import { UIProvider } from './lib/UIProvider.tsx'
+import { getVisitorId } from './lib/visitorId.ts'
+
+pendo.initialize({
+  visitor: {
+    id: getVisitorId(),
+  },
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
